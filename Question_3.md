@@ -23,7 +23,7 @@
 > 3. docker exec -it mysql5 bash (명령창 띄우기)
 > 4. mysql -u root -p (mysql 접속)
 > 5. db를 생성해준다.<br/>
->  ① create database [doodb];         []<- 원하는 이름 <br/>
+>  ① create database [doodb];         [   ]<- 원하는 이름 <br/>
 >  ② show databases;   -> 내가 입력한 db이름이 있는지 확인. <br/>
 >  ③ use [doodb] -> 내가 만든 db에 접속 <br/>
 >  ④ show tables;    -> doodb 안의 table 확인 (처음만들었으므로 empty가 나옴) <br/>
