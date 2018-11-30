@@ -22,11 +22,11 @@
 > 2. docker start mysql5 (구동)
 > 3. docker exec -it mysql5 bash (명령창 띄우기)
 > 4. mysql -u root -p (mysql 접속)
-> 5. db를 생성해준다.<hr/>
->  1) create database [doodb];         []<- 원하는 이름
->  2) show databases;   -> 내가 입력한 db이름이 있는지 확인.
->  3) use [doodb] -> 내가 만든 db에 접속
->  4) show tables;    -> doodb 안의 table 확인 (처음만들었으므로 empty가 나옴)
+> 5. db를 생성해준다.<br/>
+>  1) create database [doodb];         []<- 원하는 이름 <br/>
+>  2) show databases;   -> 내가 입력한 db이름이 있는지 확인. <br/>
+>  3) use [doodb] -> 내가 만든 db에 접속 <br/>
+>  4) show tables;    -> doodb 안의 table 확인 (처음만들었으므로 empty가 나옴) <br/>
 > 6. user 생성
 > ▶ create user [dooo]@'%' identified by "비밀번호"      
 > ▶ root의 모든 권한을 새로 생성한 DB에게 주어버리면 삭제하거나 다른것들을 만질수 있기 때문에 보안상 특정 DB권한을 부여해준다.
