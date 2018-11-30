@@ -1,5 +1,6 @@
 ## Docker를 활용하여 오라클 Express Edition을 설치하는 과정을 기술하시오.
 <hr/>
+
 ### 초기설정 <br/>
 ###### (window의 경우 oracle VM virtual box를 실행 후 default -> 설정 -> 네트워크 -> 고급 -> 포트포워딩 화면 접속 ->새 포트 추가 후 호스트포트 1521, 게스트포트 1521을 입력한다.)
 <hr/>
