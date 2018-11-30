@@ -13,7 +13,7 @@
 		ex) docker pull sath89/oracle-xe-11g:5.7
 7. 다운로드 후 입력창에 docker images를 입력. Repository의 항목들이 내가 다운로드 받은 설치파일(install)이라 보면 된다.
 8. 프로그램의 설치 파일만 가지고는 실행이 안되듯이, 내가 따로 커맨드를 입력하여 프로그램을 실행시켜준다.<br/>
-		ex) docker run -d --name oracle -p 8080:8080 -p 1521:1521
+		ex) docker run -d --name oracle -p 8080:8080 -p 1521:1521<br/>
    (oracle : 원하는 이름, 8080 -> 오라클관리자포트, 1521 ->  오라클데몬포트)
 9. 입력이 오류없이 되었다면, docker ps를 쳐보자.
    (window 아래 작업표시줄에 내가 실행시킨 아이콘들이 보이듯이 docker ps는 내가 실행시켜놓은 프로세스들을 볼 수 있다. 그곳에 Oracle이 있으면 실행 완료.)
