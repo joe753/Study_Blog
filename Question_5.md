@@ -12,16 +12,16 @@
 > 7. vi /etc/xinetd.d/telnet에 접속하여 telnet 설정<br/>
 <br/>
 
-> service telnet
-> {
->   disable = no
->   flags = REUSE
->   socket_type = stream
->   wait = no
->   user = root
->   server = /usr/sbin/in.telnetd
->   log_on_failure += USERID
-> }
+> service telnet <br/>
+> { <br/>
+>   disable = no <br/>
+>   flags = REUSE <br/>
+>   socket_type = stream <br/>
+>   wait = no <br/>
+>   user = root <br/>
+>   server = /usr/sbin/in.telnetd <br/>
+>   log_on_failure += USERID <br/>
+> } <br/>
 > /etc/init.d/xinetd restart
 
 <br/>
