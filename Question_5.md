@@ -1,4 +1,5 @@
-# 
+## 1) Lunux(Ubuntu) Docker Container를 구동하기 위한 절차를 쓰시오. <br/> 2) 설치된 Ubuntu Container에 Telnet daemon 구동 하는 법을 기술하시오. <br/> 3) 한글 사용 설정하는법 <br/> 4) Git 사용 설정에 대한 작업절차를 기술하시오. <br/>
+<hr/>
 
 > 1. 'ubuntu' image 파일을 설치 -> docker search ubuntu.
 > 2. docker pull ubuntu <br/>
@@ -10,6 +11,7 @@
 > - sudo apt-get install xinetd telnetd
 > 7. vi /etc/xinetd.d/telnet에 접속하여 telnet 설정<br/>
 <br/>
+
 > service telnet
 > {
 >   disable = no
@@ -21,6 +23,7 @@
 >   log_on_failure += USERID
 > }
 > /etc/init.d/xinetd restart
+
 <br/>
 <br/>
 > 8. docker run -itd -p 23:23 --name ubt ub_telnet bash
