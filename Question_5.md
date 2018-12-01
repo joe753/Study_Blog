@@ -22,7 +22,5 @@
 >   server = /usr/sbin/in.telnetd <br/>
 >   log_on_failure += USERID <br/>
 > } <br/>
-> /etc/init.d/xinetd restart
-
-<br/>
+> /etc/init.d/xinetd restart <br/>
 > 8. docker run -itd -p 23:23 --name ubt ub_telnet bash
