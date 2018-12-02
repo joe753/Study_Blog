@@ -1,6 +1,7 @@
 ### 5-1) Linux(Ubuntu) Docker Container를 구동하기 위한 절차를 쓰시오. <br/> 5-2) 설치된 Ubuntu Container에 Telnet daemon 구동 하는 법을 기술하시오. <br/> 5-3) 한글 사용 설정하는법 <br/> 5-4) Git 사용 설정에 대한 작업절차를 기술하시오. <br/>
 <hr/>
 ## 5-1) Linux(ubuntu) Docker Container 구동법 <hr/>
+
 > 1. 'ubuntu' image 파일을 설치 -> docker search ubuntu.
 > 2. docker pull ubuntu <br/>
 > - 원하는 설치파일 "ubuntu" 다운로드. <br/>
