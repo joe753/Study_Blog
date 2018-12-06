@@ -10,5 +10,7 @@ insert into Enroll(student, subject)
  
  
  -- 만약 학생이름과 과목을 같이 보고싶을 시 입력해주세요.
-select en.*, s.name as 'student name', sub.name as 'subject name' from Enroll as en inner join New_Student as s on en.student = s.id inner join Subject as sub on en.subject = sub.id order by s.name
+select en.*, s.name as 'student name', sub.name as 'subject name' from Enroll as en 
+ inner join New_Student as s on en.student = s.id 
+ inner join Subject as sub on en.subject = sub.id order by s.name
  
