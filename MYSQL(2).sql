@@ -1,3 +1,4 @@
+start transaction;
 
 insert into Enroll(student, subject)
  select id, (select id from Subject order by rand() limit 1) sub_id from Student order by id ;
@@ -13,3 +14,5 @@ insert into Enroll(student, subject)
 select en.*, s.name as 'student name', sub.name as 'subject name' 
 from Enroll as en inner join Student as s on en.student = s.id 
 				  inner join Subject as sub on en.subject = sub.id order by s.name;
+
+commit;
