@@ -1,131 +1,69 @@
-import mysql_migration as mm
+import pymysql
 
-# Oracle connection
-connection = mm.get_oracle_conn()
+def get_mysql_conn(db):
+    return pymysql.connect(
+        host = 'localhost', 
+        user = 'dooo', 
+        password = '1234', 
+        port = 3307, 
+        db = db, 
+        charset = 'utf8'
+        )
 
-with connection:
-  cursor = connection.cursor()
-# -----------------------Select Employees-------------------------
-  sql = '''select employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id
-            from Employees'''
-  cursor.execute(sql)
-  rows = cursor.fetchall()
-# -----------------------Select Jobs------------------------------
-  sql_job = '''select job_id, job_title, min_salary, max_salary from Jobs'''
- 
-  cursor.execute(sql_job)
-  job = cursor.fetchall()
-# -----------------------Select Departments------------------------------
-  sql_department = '''select department_id, department_name, manager_id from Departments'''
-  cursor.execute(sql_department)
-  department = cursor.fetchall()
-# -----------------------Select Job_history--------------------------------
-  sql_job_history = '''select employee_id, start_date, end_date, job_id, department_id from Job_history'''
-  cursor.execute(sql_job_history)
-  job_history = cursor.fetchall()
+def trun_table(conn, tbl):
+    cur = conn.cursor()   
+    cur.execute('truncate ' + tbl)
 
 
-# Mysql connection
-conn_dooodb = mm.get_mysql_conn('dooodb')
-with conn_dooodb:
-    cur = conn_dooodb.cursor()
+def get_count(conn, tbl, where = ''):
+    cur = conn.cursor()
+    sql = "Select count(*) from " + tbl
+    if where != '':
+        sql = sql + "where" + where
+    cur.execute(sql)
 
-# -----------------------Create Job-------------------------
-    conn_dooodb.commit()
-    cur.execute("call sp_drop_fk_refs('Job')")
-    cur.execute("drop table if exists Job")
-    job_create = '''create table Job(
-                    id varchar(10) not null primary key,
-                    job_title varchar(35) not null,
-                    min_salary int unsigned,
-                    max_salary int unsigned
-                    )'''
+    return cur.fetchone()[0]
 
-    cur.execute(job_create)
-    job_insert = '''insert into Job(id, job_title, min_salary, max_salary)
-                    values(%s, %s, %s, %s)'''
-    cur.executemany(job_insert, job)
-    print("AffectedRowsJob-->", cur.rowcount)
+import cx_Oracle
+
+def get_oracle_conn():
+    return cx_Oracle.connect("hr", "hrpw", "localhost:1521/xe")
 
 
-# -----------------------Create Department-------------------------
-    cur.execute("call sp_drop_fk_refs('Department')")
-    cur.execute("drop table if exists Department")
-    department_create = '''create table Department(
-                   id smallint(4) not null auto_increment primary key,
-                   department_name varchar(30) not null,
-                   manager_id int unsigned
-                   )'''
+def valid (ora_column , ora_table, mys_column, mys_table, mys_id = 'id'): 
 
-    cur.execute(department_create)
-    department_insert = '''insert into Department(id, department_name, manager_id)
-                   values(%s, %s, %s)'''
-    cur.executemany(department_insert, department)
-    print("AffectedRowsDepartment-->", cur.rowcount)
+    connection = get_oracle_conn()
+    with connection:
+        curs = connection.cursor()
+        rand = 'select * from (select ' + ora_column + ' from ' + ora_table + ' order by DBMS_RANDOM.RANDOM) where rownum <= 5 '
+                
+        curs.execute(rand)
+        rand_oracle_employee = curs.fetchall()
+        emp_id = []
+        for i in range(0,5):
+            if ora_table == 'Job_history':
+                emp_id.append((rand_oracle_employee[i][0] ,rand_oracle_employee[i][3]))
+            else:
+                emp_id.append(rand_oracle_employee[i][0])
 
-# -----------------------Create Job_history-------------------------
-    cur.execute("call sp_drop_fk_refs('Job_history')")
-    cur.execute("drop table if exists Job_history")
-    job_history_create = '''create table Job_history(
-                  id 
-                  employee_id int unsigned not null ,
-                  start_date date not null ,
-                  end_date date not null,
-                  job_id varchar(10) not null,
-                  department_id smallint(4),
-                  primary key(employee_id, start_date)
-                   );'''
+    conn_dooodb = get_mysql_conn('dooodb')
+    with conn_dooodb:
+        cur = conn_dooodb.cursor()
+        if ora_table == 'Job_history':
+            vr = 'select ' + mys_column + ' from ' + mys_table + '  where ' + mys_id + '= %s and Job_id = %s'
+            vr_dooodb = []
+            for i in emp_id:
+                cur.execute(vr, (i[0], i[1]))
+                vr_dooodb.append(cur.fetchone())
 
-    cur.execute(job_history_create)
-    job_history_insert = '''insert into Job_history(employee_id, start_date, end_date, job_id, department_id)
-                 values(%s, %s, %s, %s, %s)'''
-    cur.executemany(job_history_insert, job_history)
-    print("AffectedRowsJob_history-->", cur.rowcount)
-
-# -----------------------Create Employee-------------------------
-    cur.execute("call sp_drop_fk_refs('Employee')")
-    cur.execute("drop table if exists Employee")
-    sql_create = '''create table Employee(
-                    id int unsigned not null auto_increment primary key,
-                    first_name varchar(20),
-                    last_name varchar(25) not null ,
-                    email varchar(25) not null,
-                    phone_number varchar(20),
-                    hire_date date not null,
-                    job_id varchar(10) not null,
-                    salary int unsigned,
-                    commission_pct decimal(3, 2),
-                    manager_id int unsigned,
-                    department_id smallint(4)
-                    )'''
-    cur.execute(sql_create)
-    sql_insert = '''insert into Employee(id, first_name, last_name, email, phone_number, hire_date, job_id, salary, commission_pct, manager_id, department_id) 
-                    values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
-    cur.executemany(sql_insert,rows)
-    print("AffectedRowsEmployee-->", cur.rowcount)
-
-
-
-    conn_dooodb.commit()
-
-
-conn_dooodb = mm.get_mysql_conn('dooodb')
-with conn_dooodb:
-    cur = conn_dooodb.cursor()
-    employee_fk1 = "alter table Employee add constraint foreign key fk_emp_dept (department_id) references Department(id)"
-    employee_fk2 = "alter table Employee add constraint foreign key fk_emp_job (job_id) references Job(id)"
-    employee_fk3 = "alter table Employee add constraint foreign key fk_emp_manager (manager_id) references Employee(id)"
-    job_history_fk1 = "alter table Job_history add constraint foreign key fk_jobhis_dept (department_id) references Department(id)"
-    job_history_fk2 = "alter table Job_history add constraint foreign key fk_jobhis_emp (employee_id) references Employee(id)"
-    job_history_fk3 = "alter table Job_history add constraint foreign key fk_jobhis_job (job_id) references Job(id)"
-    department_fk1 = "alter table Department add constraint foreign key fk_dept_emp (manager_id) references Employee(id)"
-
-    cur.execute(employee_fk1)
-    cur.execute(employee_fk2)
-    cur.execute(employee_fk3)
-    cur.execute(job_history_fk1)
-    cur.execute(job_history_fk2)
-    cur.execute(job_history_fk3)
-    cur.execute(department_fk1)
-
-    conn_dooodb.commit()
+        else :
+            vr = 'select ' + mys_column + ' from ' + mys_table + '  where ' + mys_id + '= %s'
+            vr_dooodb = []
+            for i in emp_id:
+                cur.execute(vr, i)
+                vr_dooodb.append(cur.fetchone())
+            
+        if rand_oracle_employee == list(vr_dooodb):
+            print("---------------------" + mys_table + " OK----------")
+        else:
+            print("!!!!!!!!!!!!!!!!" + mys_table + " Wrong data--------")
